@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{fragments/layout}">
+<head>
+<title>任务历史</title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		
+		<div class="be-content">
+<!-- 			<div class="page-head"> -->
+<!-- 				<h2 class="page-head-title">任务历史</h2> -->
+<!-- 				<nav aria-label="breadcrumb" role="navigation"> -->
+<!-- 					<ol class="breadcrumb page-head-nav"> -->
+<!-- 						<li class="breadcrumb-item"><a href="#">首页</a></li> -->
+<!-- 						<li class="breadcrumb-item active">组件管理</li> -->
+<!-- 					</ol> -->
+<!-- 				</nav> -->
+<!-- 			</div> -->
+			<div class="main-content container-fluid">
+				<div class="row">
+		            <div class="col-md-12">
+		              <div class="card card-border-color card-border-color-primary">
+		                <div class="card-header card-header-divider">添加组件<span class="card-subtitle">These are the basic bootstrap form elements</span></div>
+		                <div class="card-body">
+		                  <form action="saveDiget">
+		                    <div class="form-group row">
+		                      <label class="col-12 col-sm-3 col-form-label text-sm-right" for="digetTitle">组件名称</label>
+		                      <div class="col-12 col-sm-8 col-lg-6">
+		                        <input class="form-control" id="digetTitle" name="digetTitle" type="text">
+		                      </div>
+		                    </div>
+		                    <div class="form-group row">
+		                      <label class="col-12 col-sm-3 col-form-label text-sm-right" for="digetType">组件类型</label>
+		                      <div class="col-12 col-sm-8 col-lg-6">
+		                        <input class="digetType" id="digetType" name="digetType" type="text">
+		                      </div>
+		                    </div>
+		                    <div class="form-group row">
+		                      <label class="col-12 col-sm-3 col-form-label text-sm-right" for="digetStatus">组件状态</label>
+		                      <div class="col-12 col-sm-8 col-lg-6">
+		                        <input class="form-control" id="digetStatus" name="digetStatus" type="text" placeholder="Placeholder text">
+		                      </div>
+		                    </div>
+		                    <div class="form-group row">
+		                      <label class="col-12 col-sm-3 col-form-label text-sm-right" for="inputDisabled3">组件地址</label>
+		                      <div class="col-12 col-sm-8 col-lg-6">
+		                        <input class="form-control" id="digetUrl" name="digetUrl" type="text" placeholder="Disabled input text">
+		                      </div>
+		                    </div>
+		                    <div class="form-group row">
+		                      <label class="col-12 col-sm-3 col-form-label text-sm-right" for="digetMore">更多信息</label>
+		                      <div class="col-12 col-sm-8 col-lg-6">
+		                        <input class="form-control" id="digetMore" name="digetMore" type="text" value="Readonly input text">
+		                      </div>
+		                    </div>
+		                    <div class="form-group row">
+		                      <label class="col-12 col-sm-3 col-form-label text-sm-right" for="inputTextarea3">Textarea</label>
+		                      <div class="col-12 col-sm-8 col-lg-6">
+		                        <textarea class="form-control" id="inputTextarea3"></textarea>
+		                      </div>
+		                    </div>
+		                    <div class="form-group row">
+<!-- 		                        <p class="text-right"> -->
+		                          <button class="btn btn-space btn-primary" type="submit">Register</button>
+		                          <button class="btn btn-space btn-secondary">Cancel</button>
+<!-- 		                        </p> -->
+		                      </div>
+		                  </form>
+		                </div>
+		              </div>
+		            </div>
+				
+				
+				
+				
+			</div>
+
+		</div>
+
+		<script th:src="@{../../foxy/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js}" th:inline="javascript"></script>
+
+
+	
+
+		<script type="text/javascript" th:inline="javascript">
+// 			function saveUser(){
+// 				var postData = {
+// 						userId : $("#userId").val(),
+// 						username : $("#username").val(),
+// 						password : $("#password").val()
+// 				};
+				
+// 				$.ajax({
+// 					type : "POST",
+// 					contentType : "application/json;charset=utf-8",
+// 					url : "../user/saveUser",
+// 					data : JSON.stringify(postData),
+// 					dataType : 'JSON',
+// 					timeout : 100000,
+// 		            success: function (res) {
+// 		            	console.log(["result", res]);
+// 		            	$('#editUserModal').modal('hide');
+// 		            },
+// 					error : function(message) {
+	
+// 					}
+// 			    });
+// 			}
+		</script>
+
+	</div>
+
+</body>
+</html>

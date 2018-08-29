@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{fragments/layout}">
+<head>
+<title>编辑页面</title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		
+		<div class="be-content">
+			<div class="main-content container-fluid">
+				<div class="row">
+		            <div class="col-md-12">
+		            	<div class="card card-border">
+							<div class="card-header card-header-divider">
+								页面名称：<input id="pageTitle" name="pageTitle" type="text" th:value="${pager.pageTitle}">
+								<div class="tools dropdown">
+									<span class="icon mdi mdi-receipt" style="padding-right:10px;" onclick="savePage()">保存    </span>
+									<span class="icon mdi mdi-eye" onclick="preview()" style="padding-right:10px;"> 预览   </span>
+									<a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
+										<span class="icon mdi mdi-view-web"> 添加布局</span>
+									</a>
+									<div class="dropdown-menu float-right" role="menu">
+										<a class="dropdown-item" href="#" onclick="addContainerLayout('12')">12</a>
+										<a class="dropdown-item" href="#" onclick="addContainerLayout('6 6')">6 6</a>
+										<a class="dropdown-item" href="#" onclick="addContainerLayout('8 4')">8 4</a>
+										<a class="dropdown-item" href="#" onclick="addContainerLayout('3 9')">3 9</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item" href="#">
+											<input id="customLayout" type="text"><span onclick="addCustomLayout()">确定</span>
+										</a>
+									</div>
+								</div>
+							
+							</div>
+							<div class="card-body">
+								<input type="hidden" id="pageId" th:value="${pager.pageId}">
+								<div id="layoutContainer">
+								
+								</div>
+								<p>点击页面右上角“添加布局”，设置页面的布局</p>
+								<p>在行列布局中的“编辑”操作，可以设置子容器中的内容.</p>
+<!-- 								<button class="btn btn-space btn-primary" type="submit">保存</button> -->
+							</div>
+						</div>
+		            
+		            
+		            </div>
+		            
+		            
+		            <!-- 容器内容 -->
+					<div class="modal fade" id="layoutContentModal" tabindex="-1" role="dialog" aria-labelledby="LayoutContentModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title" id="LayoutContentModalLabel">设置容器</h5>
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					      </div>
+					      <div class="modal-body">
+					      	<form>
+					      		<input id="widgetId" name="widgetId" type="hidden" value="">	
+			                    <div class="form-group row mt-2">
+			                      <label class="col-3 col-lg-2 col-form-label text-right" for="layoutWidth">容器宽度</label>
+			                      <div class="col-9 col-lg-10">
+			                        <input class="form-control" id="layoutWidth" name="layoutWidth" type="text"  >
+			                      </div>
+			                    </div>
+			                    <div class="form-group row">
+			                      <label class="col-3 col-lg-2 col-form-label text-right" for="layoutHeight">容器高度</label>
+			                      <div class="col-9 col-lg-10">
+			                        <input class="form-control" id="layoutHeight" name="layoutHeight" type="text">
+			                      </div>
+			                    </div>
+			                    <div class="form-group row">
+			                      <label class="col-3 col-lg-2 col-form-label text-right" for="layoutHeight">容器内容</label>
+			                      <div class="col-9 col-lg-10">
+			                        <input class="form-control" id="widgetUrl" name="widgetUrl" type="text" placeholder="请输入iframe地址">
+			                      </div>
+			                    </div>
+			                    <div class="form-group row">
+			                      <label class="col-3 col-lg-2 col-form-label text-right" for="layoutHeight">滚动条</label>
+			                      <div class="col-12 col-sm-8 col-lg-6 form-check mt-1">
+			                        <label class="custom-control custom-radio custom-control-inline">
+			                          <input class="custom-control-input" type="radio" name="scrolled" value="yes"><span class="custom-control-label">显示</span>
+			                        </label>
+			                        <label class="custom-control custom-radio custom-control-inline">
+			                          <input class="custom-control-input" type="radio" name="scrolled" checked value="no"><span class="custom-control-label">不显示</span>
+			                        </label>
+			                       
+			                      </div>
+			                    </div>
+			                    <div class="row pt-3 mt-1">
+			                      <div class="col-sm-6 col-lg-6 pb-4 pb-lg-0">
+			                       
+			                      </div>
+			                      <div class="col-sm-6">
+			                        <p class="text-right">
+			                          <button class="btn btn-space btn-primary" type="button" onclick="saveWiget()">保存</button>
+			                          <button class="btn btn-space" type="button" onclick="closeWiget()">关闭</button>
+			                        </p>
+			                      </div>
+			                    </div>
+			                  </form>					      					    
+					    </div>
+					  </div>
+					</div>
+					<!-- Modal end -->
+				
+				
+				
+				
+			</div>
+
+		</div>
+
+		<script th:src="@{../../foxy/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js}" th:inline="javascript"></script>
+
+
+	
+
+		<script type="text/javascript" th:inline="javascript">
+			//添加的总行数
+			var maxRow = 0;
+			
+			
+			//添加第一层容器布局
+			function addContainerLayout(columns){
+				maxRow +=1;
+				
+				var columnSum = 0;
+				var columnArr = columns.split(" ");
+				for(var i=0; i<columnArr.length; i++){
+					columnSum += parseInt(columnArr[i]);
+				}
+				//如果一行的布局列不等于12，则退出
+				if(columnSum != 12){
+					return;
+				}
+				
+				
+				//创建布局结构，并将结果更新到数据库
+				var postData = {
+						pageId : $("#pageId").val(),
+						layoutOrder : maxRow,
+						layoutName : columns,
+						parentId : 0
+				};
+				
+				
+				$.ajax({
+					type : "POST",
+					url : "../page/addLayout",
+					data : postData,
+					timeout : 100000,
+		            success: function (res) {
+		            	//操作成功
+		            	var jsonData = JSON.parse(res);
+		            	if(jsonData.statusCode == 0){
+		            		var layoutData = jsonData.data;
+
+		            		
+		            		setLayout(layoutData);
+		            	}
+		            	
+		            },
+					error : function(message) {
+
+					}
+			    });
+			}
+			
+			function addCustomLayout(){
+				var columns = $("#customLayout").val();
+				
+				var columnSum = 0;
+				var columnArr = columns.split(" ");
+				for(var i=0; i<columnArr.length; i++){
+					columnSum += parseInt(columnArr[i]);
+				}
+				//如果一行的布局列不等于12，则退出
+				if(columnSum != 12){
+					return;
+				}
+				
+				addContainerLayout(columns);
+				
+			}
+			
+			
+			
+			function setLayout(layoutData){
+				var buffer = "";
+				
+				buffer = buffer 
+					+ "<div id='container" + layoutData.layoutId + "' class='row'>"
+					+ "	<div class='col-lg-12'>"
+					+ "	  <div class='card card-contrast card-border-color card-border-color-primary'>"
+					+ "		<div class='card-header card-header-contrast'>行"
+					+ "			<div class='tools'><button class='btn btn-space ' type='button' onclick='removeContainer(\"container" + layoutData.layoutId +  "\")'><span class='icon mdi mdi-close'></span></button></div>"
+					+ "		</div>"
+					+ "		<div class='card-body card-body-contrast'>"
+					+ "			<div class='row'>";
+					
+
+				
+				//遍历Layout组件内容
+				var widgets = layoutData.widgetList;
+				for(var i=0; i<widgets.length; i++){
+					// widgetId
+					var widgetId = widgets[i].widgetId;
+					var widgetColumns = widgets[i].columnNum;
+					
+					buffer = buffer 
+					 + ("<div class='col-lg-") + widgetColumns + "'>"
+					 + ("	<div class='card card-border'>")
+					 + ("		<div class='card-header card-header-divider'>列")
+					 + ("			<div class='tools dropdown'>")
+					 + ("				<span class='icon mdi mdi-edit' onclick='editWiget(\"" + widgetId + "\")'> 编辑</span>&nbsp;&nbsp;")
+					 + ("				<a class='dropdown-toggle' href='#' role='button' data-toggle='dropdown'>")
+					 + ("					<span class='icon mdi mdi-view-web'> 添加布局</span>")
+					 + ("				</a>")
+					 + ("				<div class='dropdown-menu float-right' role='menu'>")
+					 + ("					<a class='dropdown-item' href='#' onclick='addChildrenLayout(\"" + layoutData.layoutId + "\",\"" + widgetId + "\", \"12\")'>12</a>")
+					 + ("					<a class='dropdown-item' href='#' onclick='addChildrenLayout(\"" + layoutData.layoutId + "\",\"" + widgetId + "\", \"6 6\")'>6 6</a>")
+					 + ("					<a class='dropdown-item' href='#' onclick='addChildrenLayout(\"" + layoutData.layoutId + "\",\"" + widgetId + "\", \"8 4\")'>8 4</a>")
+					 + ("					<a class='dropdown-item' href='#' onclick='addChildrenLayout(\"" + layoutData.layoutId + "\",\"" + widgetId + "\", \"3 9\")'>3 9</a>")
+					 + ("				<div class='dropdown-divider'></div>")
+					 + ("				<a class='dropdown-item' href='#'>")
+					 + ("					<input type='text'>")
+					 + ("				</a>")
+					 + ("			</div>")
+					 + ("		</div>")
+					
+					 + ("		<div class='card-body'>")
+					 + ("			<div id='" + widgetId + "'>")
+					 + ("			</div>")
+					 + ("		</div>")
+					 + ("	</div>")
+					 + ("</div>")
+					 + ("</div>");
+				}
+				
+				
+				buffer += ("</div></div></div></div></div>");
+				
+				$("#layoutContainer").append(buffer.toString());
+			}
+			
+			
+		
+			function addContainerLayout11(columns){
+				maxRow +=1;
+				
+				var columnSum = 0;
+				var columnArr = columns.split(" ");
+				for(var i=0; i<columnArr.length; i++){
+					columnSum += parseInt(columnArr[i]);
+				}
+				//12列布局
+				if(columnSum != 12){
+					return;
+				}
+				
+				//动态创建Layout列
+				var buffer = "";
+								
+				buffer = buffer 
+					+ "<div id='container" + maxRow + "' class='row'>"
+					+ "	<div class='col-lg-12'>"
+					+ "	  <div class='card card-contrast card-border-color card-border-color-primary'>"
+					+ "		<div class='card-header card-header-contrast'>行"
+					+ "			<div class='tools' onlick='removeContainer()'><button class='btn btn-space btn-secondary' onlick='removeContainer()'>删除</button><span class='icon mdi mdi-close' ></span></div>"
+					+ "		</div>"
+					+ "		<div class='card-body card-body-contrast'>"
+					+ "			<div class='row'>";
+					
+
+				
+				for(var i=0; i<columnArr.length; i++){
+					//子容器Id
+					var childContainerId = "container" + maxRow + i + columnArr[i];
+					
+					buffer = buffer 
+						 + ("<div class='col-lg-") + (columnArr[i] + "'>")	
+						 + ("	<div class='card card-border'>")
+						 + ("		<div class='card-header card-header-divider'>列")
+						 + ("			<div class='tools dropdown'>")
+						 + ("				<span class='icon mdi mdi-edit' onclick='editWiget()'> 编辑</span>&nbsp;&nbsp;")
+						 + ("				<a class='dropdown-toggle' href='#' role='button' data-toggle='dropdown'>")
+						 + ("					<span class='icon mdi mdi-view-web'> 添加布局</span>")
+						 + ("				</a>")
+						 + ("				<div class='dropdown-menu float-right' role='menu'>")
+						 + ("					<a class='dropdown-item' href='#' onclick='addChildLayout(\"" + childContainerId + "\", \"12\")'>12</a>")
+						 + ("					<a class='dropdown-item' href='#' onclick='addChildLayout(\"" + childContainerId + "\", \"6 6\")'>6 6</a>")
+						 + ("					<a class='dropdown-item' href='#' onclick='addChildLayout(\"" + childContainerId + "\", \"8 4\")'>8 4</a>")
+						 + ("					<a class='dropdown-item' href='#' onclick='addChildLayout(\"" + childContainerId + "\", \"3 9\")'>3 9</a>")
+						 + ("				<div class='dropdown-divider'></div>")
+						 + ("				<a class='dropdown-item' href='#'>")
+						 + ("					<input type='text'>")
+						 + ("				</a>")
+						 + ("			</div>")
+						 + ("		</div>")
+						
+						 + ("		<div class='card-body'>")
+						 + ("			<div id='" + childContainerId + "'>")
+						 + ("			</div>")
+						 + ("		</div>")
+						 + ("	</div>")
+						 + ("</div>")
+						 + ("</div>");
+				}
+				
+				buffer += ("</div></div></div></div></div>");
+				
+				$("#layoutContainer").append(buffer.toString());
+				var columnsNum = new Number(columns);
+				
+				//更新布局到数据库
+				addLayout(maxRow, columns, 0);
+				
+			}
+			
+			
+			function removeChildContainer(containerId){
+				alert(containerId);
+				$("#" + containerId).remove();
+			}
+			
+			
+			function addChildrenLayout(layoutId, containerId, columns){
+// 				var childContainerId = containerId.substring(9);
+				var postData = {
+						pageId : $("#pageId").val(),
+						layoutOrder : maxRow,
+						layoutName : columns,
+						parentId : 0
+				};
+				
+				
+				$.ajax({
+					type : "POST",
+					url : "../page/addLayout",
+					data : postData,
+					timeout : 100000,
+		            success: function (res) {
+		            	//操作成功
+		            	var jsonData = JSON.parse(res);
+		            	if(jsonData.statusCode == 0){
+		            		var layoutData = jsonData.data;
+
+		            		
+		            		setLayout(layoutData);
+		            	}
+		            	
+		            },
+					error : function(message) {
+
+					}
+			    });
+			}
+			
+			
+			
+			//添加子容器
+			function addChildLayout(containerId, columns){
+				//子组件Id，不带标识字母
+				var childContainerId = containerId.substring(9);
+					
+				var columnSum = 0;
+				var columnArr = columns.split(" ");
+				for(var i=0; i<columnArr.length; i++){
+					columnSum += parseInt(columnArr[i]);
+				}
+				//12列布局
+				if(columnSum != 12){
+					return;
+				}
+				
+				
+				var buffer = "";
+				
+				buffer = buffer 
+					+ "<div id='subContainer" + childContainerId + "' class='row'>"
+					+ "	<div class='col-lg-12'>"
+					+ "	  <div class='card card-contrast card-border-color card-border-color-primary'>"
+					+ "		<div class='card-header card-header-contrast'>行"
+					+ "			<div class='tools' onlick='removeChildContainer(\"subContainer" + childContainerId + "\")'><button class='btn btn-space btn-secondary'>删除</button><span class='icon mdi mdi-close'></span></div>"
+					+ "		</div>"
+					+ "		<div class='card-body card-body-contrast'>"
+					+ "			<div class='row'>";
+					
+
+				
+				for(var i=0; i<columnArr.length; i++){
+					//子容器Id
+					var childContainerId = "container" + childContainerId + i + columnArr[i];
+					
+					buffer = buffer 
+						 + ("<div class='col-lg-") + (columnArr[i] + "'>")	
+						 + ("	<div class='card card-border'>")
+						 + ("		<div class='card-header card-header-divider'>列")
+						 + ("			<div class='tools dropdown'>")
+						 + ("				<span class='icon mdi mdi-edit' onclick='editWiget(\"" + widgetId + "\")'> 编辑</span>&nbsp;&nbsp;")
+						 + ("				<a class='dropdown-toggle' href='#' role='button' data-toggle='dropdown'>")
+						 + ("					<span class='icon mdi mdi-view-web'> 添加布局    </span>")
+						 + ("				</a>")
+						 + ("				<div class='dropdown-menu float-right' role='menu'>")
+						 + ("					<a class='dropdown-item' href='#' onclick='addChildLayout(\"" + childContainerId + "\", \"12\")'>12</a>")
+						 + ("					<a class='dropdown-item' href='#' onclick='addChildLayout(\"" + childContainerId + "\", \"6 6\")'>6 6</a>")
+						 + ("					<a class='dropdown-item' href='#' onclick='addChildLayout(\"" + childContainerId + "\", \"8 4\")'>8 4</a>")
+						 + ("					<a class='dropdown-item' href='#' onclick='addChildLayout(\"" + childContainerId + "\", \"3 9\")'>3 9</a>")
+						 + ("				<div class='dropdown-divider'></div>")
+						 + ("				<a class='dropdown-item' href='#'>")
+						 + ("					<input type='text'>")
+						 + ("				</a>")
+						 + ("			</div>")
+						 + ("		</div>")
+						
+						 + ("		<div class='card-body'>")
+						 + ("			<div id='" + childContainerId + "'>")
+						 + ("			</div>")
+						 + ("		</div>")
+						 + ("	</div>")
+						 + ("</div>")
+						 + ("</div>");
+				}
+				
+				buffer += ("</div></div></div></div></div>");
+				
+				$("#" + containerId).append(buffer.toString());
+				
+				
+			}
+			
+			
+			function addLayout(order, layout, parentId){
+				var postData = {
+						pageId : $("#pageId").val(),
+						layoutOrder : order,
+						layoutName : layout,
+						parentId : parentId
+				};
+				
+				
+				$.ajax({
+					type : "POST",
+					url : "../page/addLayout",
+					data : postData,
+					timeout : 100000,
+		            success: function (res) {
+		            	console.log(["result", res]);
+		            	
+		            },
+					error : function(message) {
+
+					}
+			    });
+			}
+			
+			//移除组件
+			function removeContainer(containerId){
+				var layoutId = containerId.substring(9);
+				var postData = {
+						layoutId : layoutId
+				};
+				
+				$.ajax({
+					type : "POST",
+					url : "../page/deleteLayout",
+					data : postData,
+					timeout : 100000,
+		            success: function (res) {		            	
+		            	$("#" + containerId).remove();
+		            },
+					error : function(message) {
+	
+					}
+			    });			
+				
+			}
+			
+// 			function removeContainer(){
+// 				alert("XXXXXXXXXXXX");
+				
+				
+// 			}
+			
+			//编辑列组件
+			function editWiget(widgetId){
+				var postData = {
+						widgetId : widgetId
+				};
+				
+				$.ajax({
+					type : "POST",
+					url : "../page/viewWidget",
+					data : postData,
+					timeout : 100000,
+		            success: function (res) {
+		            	console.log(["result", res]);
+		            	var jsonData = JSON.parse(res);
+		            	$("#widgetId").val(jsonData.data.widgetId);
+		            	$("#widgetUrl").val(jsonData.data.widgetUrl);
+		            	$("#layoutWidth").val(jsonData.data.layoutWidth);
+		            	$("#layoutHeight").val(jsonData.data.layoutHeight);
+		            	if(jsonData.data.scrolled){
+		            		$("input[type=radio]").attr("checked", 'yes');
+		            	}else{
+		            		$("input[type=radio]").attr("checked", 'no');
+		            	}
+		            	$('#layoutContentModal').modal('show');
+		            },
+					error : function(message) {
+	
+					}
+			    });				
+			}
+		
+			//保存组件
+			function saveWiget(){
+				var postData = {
+					widgetId : $("#widgetId").val(),
+					layoutWidth : $("#layoutWidth").val(),
+					layoutHeight : $("#layoutHeight").val(),
+					widgetUrl : $("#widgetUrl").val(),
+					scrolled : $("input[name='scrolled']:checked").val()
+				};
+				
+				$.ajax({
+					type : "POST",
+					url : "../page/saveWidget",
+					data : postData,
+					timeout : 100000,
+		            success: function (res) {
+// 		            	alert("操作成功");
+		            	$('#layoutContentModal').modal('hide');
+		            },
+					error : function(message) {
+	
+					}
+			    });				
+			}
+			
+			function closeWiget(){
+				$('#layoutContentModal').modal('hide');
+			}
+			
+			
+			//保存页面
+			function savePage(){
+				var postData = {
+					pageId : $("#pageId").val(),
+					pageTitle : $("#pageTitle").val()
+				};
+				
+				
+				$.ajax({
+					type : "POST",
+					url : "../page/savePage",
+					data : postData,
+					timeout : 100000,
+		            success: function (res) {
+		            	alert("保存成功");
+		            	
+		            },
+					error : function(message) {
+
+					}
+			    });
+			}
+			
+			
+			//预览页面
+			function preview(){
+				window.open("page/view?pageId=" + $("#pageId").val());
+			}
+		
+		</script>
+
+	</div>
+
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/perfect-scrollbar.min.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/material-design-iconic-font.min.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/jquery-jvectormap-1.2.2.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/jqvmap.min.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/bootstrap-datetimepicker.min.css}"/>
+<link rel="stylesheet" th:href="@{../../foxy/css/app.css}" type="text/css"/>
+
+<link rel="shortcut icon" th:href="@{../../staradmin/images/favicon.png}" />
+
+
+<script th:src="@{../../foxy/lib/jquery/jquery.min.js}" ></script>
+
+<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">OCR识别</title>
+</head>
+<body>
+
+<div class="be-wrapper">
+	<th:block th:replace="fragments/header :: header" />
+	
+	<div class="container-fluid page-body-wrapper">
+
+		<th:block th:replace="fragments/sidebar :: sidebar" />
+
+		<th:block layout:fragment="content" />
+
+	</div>
+	<div class="container"></div>
+<!-- 	<th:block th:replace="fragments/footer :: footer" /> -->
+	
+</div>	
+	
+	
+	
+    <script th:src="@{../../foxy/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/app.js}" ></script>
+    <script th:src="@{../../foxy/lib/jquery.sparkline/jquery.sparkline.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/countup/countUp.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/jqueryui/jquery-ui.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/dropzone/dropzone.js}" ></script>
+ <script type="text/javascript">
+      $(document).ready(function(){
+      	//-initialize the javascript
+      	App.init();
+      	App.dashboard();
+      
+      });
+    </script>
+</body>
+</html>

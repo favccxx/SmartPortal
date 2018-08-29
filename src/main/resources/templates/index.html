@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{fragments/layout}">
+<head>
+<title>首页</title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<link rel="stylesheet" th:href="@{../../foxy/lib/dropzone/dropzone.css}" type="text/css"/>
+		
+		<div class="be-content">
+			<div class="page-head">
+				<h2 class="page-head-title">多文件上传</h2>
+				<nav aria-label="breadcrumb" role="navigation">
+					<ol class="breadcrumb page-head-nav">
+						<li class="breadcrumb-item"><a href="#">首页</a></li>
+						<li class="breadcrumb-item active">文件上传</li>
+					</ol>
+				</nav>
+			</div>
+			<div class="main-content container-fluid">
+				<form class="dropzone" id="my-awesome-dropzone" action="upload"
+					enctype="multipart/form-data" method='post'>
+					<div class="dz-message">
+						<div class="icon">
+							<span class="mdi mdi-cloud-upload"></span>
+						</div>
+						<h2>上传待识别OCR文件</h2>
+						<span class="note">(This is just a demo dropzone. Selected
+							files are <strong>not</strong> actually uploaded.)
+						</span>
+						<div class="dropzone-mobile-trigger needsclick"></div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<script type="text/javascript" th:inline="javascript">			
+			
+			$(document).ready(function() {
+				 $(".file-dropzone").on('dragover', handleDragEnter);
+			       $(".file-dropzone").on('dragleave', handleDragLeave);
+			       $(".file-dropzone").on('drop', handleDragLeave);
+
+			       function handleDragEnter(e) {
+
+			              this.classList.add('drag-over');
+			       }
+
+			       function handleDragLeave(e) {
+
+			              this.classList.remove('drag-over');
+			       }
+
+			       // "dropzoneForm" is the camel-case version of the form id "dropzone-form"
+			       Dropzone.options.dropzoneForm = {
+
+			              url : "upload", // not required if the <form> element has action attribute
+			              autoProcessQueue : false,
+			              uploadMultiple : true,
+			              maxFilesize : 256, // MB
+			              parallelUploads : 100,
+			              maxFiles : 100,
+			              addRemoveLinks : true,
+			              previewsContainer : ".dropzone-previews",
+
+			              // The setting up of the dropzone
+			              init : function() {
+
+			                     var myDropzone = this;
+
+			                     // first set autoProcessQueue = false
+			                     $('#upload-button').on("click", function(e) {
+
+			                           myDropzone.processQueue();
+			                     });
+
+			                     // customizing the default progress bar
+			                     this.on("uploadprogress", function(file, progress) {
+
+			                           progress = parseFloat(progress).toFixed(0);
+
+			                           var progressBar = file.previewElement.getElementsByClassName("dz-upload")[0];
+			                           progressBar.innerHTML = progress + "%";
+			                     });
+
+			                     // displaying the uploaded files information in a Bootstrap dialog
+			                     this.on("successmultiple", function(files, serverResponse) {
+			                           showInformationDialog(files, serverResponse);
+			                     });
+			              }
+			       }
+			});
+			
+		
+		</script>
+
+	</div>
+
+</body>
+</html>

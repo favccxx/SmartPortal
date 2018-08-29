@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<th:block th:fragment="sidebar">
+	
+	<div class="be-left-sidebar">
+        <div class="left-sidebar-wrapper"><a class="left-sidebar-toggle" href="#">首页</a>
+          <div class="left-sidebar-spacer">
+            <div class="left-sidebar-scroll">
+              <div class="left-sidebar-content">
+                <ul class="sidebar-elements">
+                  <li class="divider">菜单</li>
+                  <li class="active"><a href="/"><i class="icon mdi mdi-cloud-upload"></i><span>上传文件</span></a>
+                  </li>
+                  <li>
+                  	<a href="#"><i class="icon mdi mdi-cloud"></i><span>处理中任务</span></a>                    
+                  </li>
+                  <li>
+                  	<a href="/history"><i class="icon mdi mdi-cloud-download"></i><span>任务历史</span></a>                    
+                  </li>
+                  
+                  <li>
+                  	<a href="/diget"><i class="icon mdi mdi-disqus"></i><span>组件管理</span></a>                    
+                  </li>
+                   <li>
+                  	<a href="/pager"><i class="icon mdi mdi-layers"></i><span>页面管理</span></a>                    
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+		
+	</th:block>
+
+</body>
+</html>

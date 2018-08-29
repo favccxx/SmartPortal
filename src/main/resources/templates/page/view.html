@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/perfect-scrollbar.min.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/material-design-iconic-font.min.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/jquery-jvectormap-1.2.2.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/jqvmap.min.css}"/>
+<link rel="stylesheet" type="text/css" th:href="@{../../foxy/css/bootstrap-datetimepicker.min.css}"/>
+<link rel="stylesheet" th:href="@{../../foxy/css/app.css}" type="text/css"/>
+
+<script th:src="@{../../foxy/lib/jquery/jquery.min.js}" ></script>
+<title>我的门户</title>
+</head>
+<body>
+	<div class="be-wrapper">
+		
+
+<!-- 		<div class="be-content"> -->
+			<div class="main-content container-fluid">
+				
+				<div th:each="layoutItem:${layoutList}" class="row">  
+						<!-- 遍历组件列 -->
+						
+						<div th:each="widgetItem:${layoutItem.widgetList}" th:class="'col-lg-' + ${widgetItem.columnNum}"> 
+							<iframe th:src="${widgetItem.widgetUrl}" th:width="${widgetItem.layoutWidth}" th:height="${widgetItem.layoutHeight}" align="middle" th:scrolling="${widgetItem.scrolled}"></iframe>
+
+					
+					</div>
+				
+			</div>
+		
+		
+		
+	</div>		
+			
+
+<!-- 		</div> -->
+
+		<script type="text/javascript" th:inline="javascript">
+		
+			function addPage(){
+			
+			}
+		
+		
+			$(document).ready(function() {
+			
+			});
+		</script>
+
+	</div>
+
+
+ <script th:src="@{../../foxy/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/bootstrap/js/bootstrap.bundle.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/app.js}" ></script>
+    <script th:src="@{../../foxy/lib/jquery.sparkline/jquery.sparkline.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/countup/countUp.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/jqueryui/jquery-ui.min.js}" ></script>
+    <script th:src="@{../../foxy/lib/dropzone/dropzone.js}" ></script>
+
+</body>
+</html>
